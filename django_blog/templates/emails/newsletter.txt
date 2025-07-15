@@ -1,0 +1,31 @@
+{{ blog_name|default:"Django Blog" }} Newsletter
+{{ "="|ljust:50 }}
+
+{% if message %}
+{{ message }}
+
+{% endif %}
+FEATURED POSTS
+{{ "-"|ljust:50 }}
+
+{% for post in posts %}
+{{ forloop.counter }}. {{ post.title }}
+   Published: {{ post.created_at|date:"F d, Y" }}
+   Author: {{ post.author.get_full_name|default:post.author.username }}
+   {% if post.excerpt %}
+   {{ post.excerpt }}
+   {% endif %}
+   
+   Read more: {{ site_url }}/posts/{{ post.slug }}/
+
+{% endfor %}
+
+{{ "="|ljust:50 }}
+Thank you for subscribing to our newsletter!
+
+Visit our website: {{ site_url }}
+
+To unsubscribe from this newsletter, visit:
+{{ site_url }}/unsubscribe/?email={{ recipient_email }}
+
+This email was sent to {{ recipient_email }}.

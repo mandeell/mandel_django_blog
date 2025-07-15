@@ -1,0 +1,230 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Posts by {{ author.get_full_name|default:author.username }} - Django Blog{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="bg-gray-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-gray-500">
+            <a href="{% url 'blog:home' %}" class="hover:text-blue-600 transition-colors duration-200">Home</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-gray-900 font-medium">Author: {{ author.get_full_name|default:author.username }}</span>
+        </nav>
+    </div>
+</div>
+
+<!-- Author Header Section -->
+<section class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <!-- Author Avatar -->
+            <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                {% if author.profile_picture %}
+                    <img src="{{ author.profile_picture.url }}" 
+                         alt="{{ author.username }}" 
+                         class="w-24 h-24 rounded-full object-cover">
+                {% else %}
+                    <span class="text-purple-600 font-bold text-3xl">
+                        {{ author.username|first|upper }}
+                    </span>
+                {% endif %}
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                {{ author.get_full_name|default:author.username }}
+            </h1>
+            
+            {% if author.bio %}
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                {{ author.bio }}
+            </p>
+            {% endif %}
+            
+            <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-500 mb-8">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-calendar text-purple-500"></i>
+                    <span>Joined {{ author.date_joined|date:"F Y" }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-file-alt text-purple-500"></i>
+                    <span>{{ posts|length }} post{{ posts|length|pluralize }}</span>
+                </div>
+                {% if author.email %}
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-envelope text-purple-500"></i>
+                    <span>{{ author.email }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">
+                <i class="fas fa-user mr-2"></i>
+                Author Profile
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Posts Section -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if posts %}
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                Posts by {{ author.get_full_name|default:author.username }}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in posts %}
+            <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+                <!-- Featured Image -->
+                <div class="relative h-48 overflow-hidden">
+                    {% if post.featured_image %}
+                        <img src="{{ post.featured_image.url }}" 
+                             alt="{{ post.title }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    {% else %}
+                        <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                            <i class="fas fa-file-alt text-white text-4xl"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        {% for tag in post.tags.all|slice:":3" %}
+                            <a href="{{ tag.get_absolute_url }}" 
+                               class="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-100 transition-colors duration-200">
+                                {{ tag.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                        <a href="{{ post.get_absolute_url }}" class="hover:text-blue-600 transition-colors duration-200">
+                            {{ post.title }}
+                        </a>
+                    </h3>
+                    
+                    <!-- Excerpt -->
+                    <p class="text-gray-600 mb-4 line-clamp-3">{{ post.excerpt }}</p>
+                    
+                    <!-- Date and Read More -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ post.published_at|date:"M d, Y" }}</span>
+                        </div>
+                        <a href="{{ post.get_absolute_url }}" 
+                           class="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center space-x-1">
+                            <span>Read</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="flex items-center justify-center mt-12">
+            <nav class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" 
+                       class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-200">
+                        <i class="fas fa-angle-double-left mr-1"></i>
+                        First
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}" 
+                       class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-200">
+                        <i class="fas fa-angle-left mr-1"></i>
+                        Previous
+                    </a>
+                {% endif %}
+                
+                <span class="px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" 
+                       class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-200">
+                        Next
+                        <i class="fas fa-angle-right ml-1"></i>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" 
+                       class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-200">
+                        Last
+                        <i class="fas fa-angle-double-right ml-1"></i>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <!-- No Posts State -->
+        <div class="text-center py-16">
+            <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-user-edit text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">No posts yet</h3>
+            <p class="text-gray-600 mb-8 max-w-md mx-auto">
+                {{ author.get_full_name|default:author.username }} hasn't published any posts yet.
+            </p>
+            <a href="{% url 'blog:home' %}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                Browse All Posts
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Author Stats Section -->
+{% if posts %}
+<section class="py-16 bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="p-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ posts|length }}</h3>
+                <p class="text-gray-600">Published Posts</p>
+            </div>
+            <div class="p-6">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar text-purple-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ author.date_joined|date:"Y" }}</h3>
+                <p class="text-gray-600">Member Since</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,382 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Send Newsletter - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .main-container {
+        min-height: 100vh;
+    }
+    .content-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .section-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    .section-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-color: #d1d5db;
+    }
+    .post-card {
+        transition: all 0.3s ease;
+        border: 2px solid #f3f4f6;
+        cursor: pointer;
+        background: #ffffff;
+    }
+    .post-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        border-color: #e5e7eb;
+    }
+    .post-card.selected {
+        border-color: #8b5cf6;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+    }
+    .form-input {
+        transition: all 0.3s ease;
+        border: 2px solid #e5e7eb;
+    }
+    .form-input:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        outline: none;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+    }
+    .btn-secondary {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
+    }
+    .header-icon {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+    }
+    .icon-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+    .icon-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .icon-orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .icon-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    
+    @media (max-width: 768px) {
+        .mobile-stack {
+            flex-direction: column;
+        }
+        .mobile-full {
+            width: 100%;
+        }
+        .mobile-text-center {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-20 h-20 header-icon rounded-2xl mb-6 shadow-lg">
+                <i class="fas fa-paper-plane text-3xl text-white"></i>
+            </div>
+            <h1 class="text-5xl font-bold text-black mb-4">Send Newsletter</h1>
+            <p class="text-xl text-blue-900 max-w-2xl mx-auto leading-relaxed">
+                {% if subscriber %}
+                    Send a personalized newsletter to <span class="font-semibold">{{ subscriber.email }}</span>
+                {% else %}
+                    Create and send professional newsletters to your subscribers
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto">
+            <div class="content-card rounded-3xl shadow-2xl overflow-hidden">
+                <form method="post" id="emailForm" class="p-8 lg:p-12">
+                    {% csrf_token %}
+                    
+                    <!-- Email Configuration Section -->
+                    <div class="section-card rounded-2xl p-8 mb-8">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="section-icon icon-purple">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">Email Configuration</h2>
+                                <p class="text-gray-600">Set up your newsletter details</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Subject Field -->
+                            <div>
+                                <label for="{{ form.subject.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-3">
+                                    <i class="fas fa-heading mr-2 text-purple-500"></i>Email Subject
+                                </label>
+                                <input type="text" 
+                                       name="subject" 
+                                       id="{{ form.subject.id_for_label }}"
+                                       class="form-input w-full px-4 py-3 rounded-xl text-lg"
+                                       placeholder="Enter your newsletter subject..."
+                                       required>
+                                {% if form.subject.errors %}
+                                    <div class="text-red-500 text-sm mt-2">{{ form.subject.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Send to All Toggle (only show if no specific subscriber) -->
+                            {% if not subscriber %}
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <label for="{{ form.send_to_all.id_for_label }}" class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                            <i class="fas fa-users text-blue-600"></i>Send to All Subscribers
+                                        </label>
+                                        <p class="text-gray-600 mt-1">Send this newsletter to all active subscribers in your database</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer ml-4">
+                                        {{ form.send_to_all }}
+                                    </label>
+                                </div>
+                                {% if form.send_to_all.errors %}
+                                    <div class="text-red-500 text-sm mt-2">{{ form.send_to_all.errors }}</div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Message Content Section -->
+                    <div class="section-card rounded-2xl p-8 mb-8">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="section-icon icon-green">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">Message Content</h2>
+                                <p class="text-gray-600">Write your personal message to subscribers</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.message.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-3">
+                                <i class="fas fa-comment-alt mr-2 text-green-500"></i>Personal Message
+                            </label>
+                            <textarea name="message" 
+                                      id="{{ form.message.id_for_label }}"
+                                      rows="6"
+                                      class="form-input w-full px-4 py-3 rounded-xl resize-none"
+                                      placeholder="Write your personal message to subscribers. This will appear before the selected posts..."></textarea>
+                            {% if form.message.errors %}
+                                <div class="text-red-500 text-sm mt-2">{{ form.message.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Post Selection Section -->
+                    <div class="section-card rounded-2xl p-8 mb-8">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="section-icon icon-orange">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">Select Posts</h2>
+                                <p class="text-gray-600">Choose which posts to include in your newsletter</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-4 max-h-96 overflow-y-auto pr-2">
+                            {% for post in form.posts.field.queryset %}
+                            <div class="post-card p-6 rounded-xl" data-post-id="{{ post.id }}">
+                                <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <input type="checkbox" 
+                                               name="posts" 
+                                               value="{{ post.id }}" 
+                                               id="post_{{ post.id }}"
+                                               class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 focus:ring-2">
+                                    </div>
+                                    
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-start justify-between gap-4">
+                                            <div class="flex-1">
+                                                <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">{{ post.title }}</h3>
+                                                {% if post.excerpt %}
+                                                    <p class="text-gray-600 mb-4 leading-relaxed">{{ post.excerpt|truncatewords:25 }}</p>
+                                                {% else %}
+                                                    <p class="text-gray-400 mb-4 italic">No excerpt available for this post</p>
+                                                {% endif %}
+                                                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                                                    <span class="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full">
+                                                        <i class="fas fa-calendar text-purple-500"></i>
+                                                        {{ post.created_at|date:"M d, Y" }}
+                                                    </span>
+                                                    <span class="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full">
+                                                        <i class="fas fa-user text-blue-500"></i>
+                                                        {{ post.author.username }}
+                                                    </span>
+                                                    {% if post.tags.exists %}
+                                                    <span class="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full">
+                                                        <i class="fas fa-tags text-green-500"></i>
+                                                        {{ post.tags.count }} tag{{ post.tags.count|pluralize }}
+                                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            {% if post.featured_image %}
+                                            <div class="flex-shrink-0">
+                                                <img src="{{ post.featured_image.url }}" 
+                                                     alt="{{ post.title }}"
+                                                     class="w-24 h-24 object-cover rounded-xl shadow-md">
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-12">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                                    <i class="fas fa-newspaper text-2xl text-gray-400"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">No Published Posts</h3>
+                                <p class="text-gray-500">There are no published posts available to include in the newsletter.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.posts.errors %}
+                            <div class="text-red-500 text-sm mt-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                                {{ form.posts.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl">
+                            <div class="text-red-800 font-medium">
+                                {{ form.non_field_errors }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 mobile-stack">
+                        <button type="submit" 
+                                class="btn-primary flex-1 mobile-full inline-flex items-center justify-center px-8 py-4 text-white font-semibold rounded-xl shadow-lg text-lg">
+                            <i class="fas fa-paper-plane mr-3"></i>
+                            Send Newsletter
+                        </button>
+                        <a href="{% url 'admin_panel:subscriber_list' %}" 
+                           class="btn-secondary inline-flex items-center justify-center px-8 py-4 text-white font-semibold rounded-xl shadow-lg text-lg mobile-full">
+                            <i class="fas fa-arrow-left mr-3"></i>
+                            Back to Subscribers
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Post selection functionality
+    const checkboxes = document.querySelectorAll('input[name="posts"]');
+    
+    checkboxes.forEach(checkbox => {
+        const postCard = document.querySelector(`[data-post-id="${checkbox.value}"]`);
+        
+        function updateCardState() {
+            if (checkbox.checked) {
+                postCard.classList.add('selected');
+            } else {
+                postCard.classList.remove('selected');
+            }
+        }
+        
+        // Click on card to toggle checkbox
+        postCard.addEventListener('click', function(e) {
+            if (e.target.type !== 'checkbox') {
+                checkbox.checked = !checkbox.checked;
+                updateCardState();
+            }
+        });
+        
+        // Direct checkbox change
+        checkbox.addEventListener('change', updateCardState);
+        
+        // Initial state
+        updateCardState();
+    });
+    
+    // Form validation
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        const selectedPosts = document.querySelectorAll('input[name="posts"]:checked');
+        const subject = document.querySelector('input[name="subject"]').value.trim();
+        
+        if (selectedPosts.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one post to include in the newsletter.');
+            return;
+        }
+        
+        if (!subject) {
+            e.preventDefault();
+            alert('Please enter an email subject.');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Sending Newsletter...';
+        submitBtn.disabled = true;
+        
+        // Re-enable button after 30 seconds as fallback
+        setTimeout(() => {
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+        }, 30000);
+    });
+    
+    // Enhanced form interactions
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+});
+</script>
+{% endblock %}

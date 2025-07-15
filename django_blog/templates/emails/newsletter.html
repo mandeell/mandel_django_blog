@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ subject }}</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Reset styles */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+        
+        /* Main styles */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #374151;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: #e0e7ff;
+            font-size: 16px;
+            margin: 10px 0 0 0;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .message-section {
+            background-color: #f8fafc;
+            border-left: 4px solid #8b5cf6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .message-section p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        .posts-section h2 {
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .post-item {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .post-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .post-title {
+            color: #1f2937;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+        }
+        
+        .post-title a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+        
+        .post-title a:hover {
+            color: #8b5cf6;
+        }
+        
+        .post-excerpt {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        
+        .post-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .read-more-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+        }
+        
+        .read-more-btn:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+        }
+        
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+        }
+        
+        .footer a {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #6b7280;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            color: #8b5cf6;
+        }
+        
+        .unsubscribe {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .unsubscribe a {
+            color: #9ca3af;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        
+        /* Responsive styles */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            
+            .header, .content, .footer {
+                padding: 20px !important;
+            }
+            
+            .header h1 {
+                font-size: 24px !important;
+            }
+            
+            .post-item {
+                padding: 20px !important;
+            }
+            
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>{{ blog_name|default:"Django Blog" }}</h1>
+            <p>Your latest updates and featured content</p>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Personal Message -->
+            {% if message %}
+            <div class="message-section">
+                <p>{{ message|linebreaks }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Posts Section -->
+            <div class="posts-section">
+                <h2>📰 Featured Posts</h2>
+                
+                {% for post in posts %}
+                <div class="post-item">
+                    <h3 class="post-title">
+                        <a href="{{ site_url }}/posts/{{ post.slug }}/">{{ post.title }}</a>
+                    </h3>
+                    
+                    <div class="post-meta">
+                        <span>📅 {{ post.created_at|date:"F d, Y" }}</span>
+                        <span>✍️ {{ post.author.get_full_name|default:post.author.username }}</span>
+                        {% if post.tags.exists %}
+                        <span>🏷️ {{ post.tags.count }} tag{{ post.tags.count|pluralize }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if post.excerpt %}
+                    <p class="post-excerpt">{{ post.excerpt }}</p>
+                    {% endif %}
+                    
+                    <a href="{{ site_url }}/posts/{{ post.slug }}/" class="read-more-btn">
+                        Read Full Article →
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Thank you for subscribing to our newsletter!</strong></p>
+            <p>Stay connected with us for more amazing content.</p>
+            
+            <div class="social-links">
+                <a href="#" title="Facebook">📘</a>
+                <a href="#" title="Twitter">🐦</a>
+                <a href="#" title="LinkedIn">💼</a>
+                <a href="#" title="Instagram">📷</a>
+            </div>
+            
+            <p>
+                Visit our website: <a href="{{ site_url }}">{{ site_url }}</a>
+            </p>
+            
+            <div class="unsubscribe">
+                <p>
+                    <a href="{{ site_url }}/unsubscribe/?email={{ recipient_email }}">
+                        Unsubscribe from this newsletter
+                    </a>
+                </p>
+                <p style="font-size: 11px; color: #9ca3af; margin-top: 10px;">
+                    This email was sent to {{ recipient_email }}. 
+                    If you no longer wish to receive these emails, you can unsubscribe at any time.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

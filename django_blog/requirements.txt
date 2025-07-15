@@ -1,0 +1,6 @@
+Django
+Pillow
+python-decouple
+setuptools
+django-ratelimit
+django-quill

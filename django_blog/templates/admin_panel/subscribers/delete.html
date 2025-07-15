@@ -1,0 +1,178 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Delete Subscriber - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delete-container {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    }
+    .delete-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+    }
+    .warning-icon {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .danger-btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        transition: all 0.3s ease;
+    }
+    .danger-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+    }
+    .safe-btn {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        transition: all 0.3s ease;
+    }
+    .safe-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(108, 117, 125, 0.3);
+    }
+    @media (max-width: 768px) {
+        .mobile-stack {
+            flex-direction: column;
+        }
+        .mobile-full {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen delete-container flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+        <div class="delete-card rounded-2xl p-8 shadow-2xl text-center">
+            <!-- Warning Icon -->
+            <div class="warning-icon inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
+                <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Delete Subscriber</h1>
+            
+            <!-- Warning Message -->
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+                <p class="text-red-800 text-sm font-medium mb-2">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    This action cannot be undone!
+                </p>
+                <p class="text-red-700 text-sm">
+                    You are about to permanently delete this subscriber from your mailing list.
+                </p>
+            </div>
+            
+            <!-- Subscriber Info -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        {{ subscriber.email.0|upper }}
+                    </div>
+                    <div class="text-left">
+                        <div class="font-semibold text-gray-900">{{ subscriber.email }}</div>
+                        <div class="text-sm text-gray-500">
+                            Subscribed {{ subscriber.subscribed_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-xs text-gray-500">
+                    <i class="fas fa-clock mr-1"></i>
+                    Member for {{ subscriber.subscribed_at|timesince }}
+                </div>
+            </div>
+            
+            <!-- Consequences -->
+            <div class="text-left mb-6">
+                <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <i class="fas fa-list-ul text-red-500"></i>
+                    What will happen:
+                </h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-times text-red-500 text-xs"></i>
+                        Subscriber will be removed from all mailing lists
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-times text-red-500 text-xs"></i>
+                        They will no longer receive newsletters
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-times text-red-500 text-xs"></i>
+                        All subscription data will be permanently deleted
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Action Buttons -->
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <div class="flex flex-col sm:flex-row gap-3 mobile-stack">
+                    <button type="submit" 
+                            class="danger-btn flex-1 mobile-full inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-xl shadow-lg">
+                        <i class="fas fa-trash mr-2"></i>
+                        Yes, Delete Subscriber
+                    </button>
+                    <a href="{% url 'admin_panel:subscriber_list' %}" 
+                       class="safe-btn flex-1 mobile-full inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-xl shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+            
+            <!-- Alternative Actions -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <p class="text-xs text-gray-500 mb-3">Alternative actions:</p>
+                <div class="flex justify-center gap-4">
+                    <a href="{% url 'admin_panel:subscriber_email' subscriber.pk %}" 
+                       class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Email
+                    </a>
+                    <a href="{% url 'admin_panel:subscriber_list' %}" 
+                       class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fas fa-list"></i>
+                        View All
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Info -->
+        <div class="mt-6 text-center">
+            <p class="text-white text-sm opacity-90">
+                <i class="fas fa-shield-alt mr-2"></i>
+                Your data is protected and secure
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add confirmation dialog
+    const deleteForm = document.querySelector('form');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            const confirmed = confirm('Are you absolutely sure you want to delete this subscriber? This action cannot be undone.');
+            if (!confirmed) {
+                e.preventDefault();
+            } else {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...';
+                submitBtn.disabled = true;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

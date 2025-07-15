@@ -1,0 +1,109 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+        <p>Welcome back, {{ user.username }}! Here's an overview of your blog.</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_posts }}</div>
+            <div class="stat-label">Total Posts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ published_posts }}</div>
+            <div class="stat-label">Published Posts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_comments }}</div>
+            <div class="stat-label">Total Comments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ pending_comments }}</div>
+            <div class="stat-label">Pending Comments</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_subscribers }}</div>
+            <div class="stat-label">Subscribers</div>
+        </div>
+    </div>
+    
+    <div class="dashboard-content">
+        <div class="content-section">
+            <h3 class="section-title"><i class="fas fa-clock"></i> Recent Posts</h3>
+            <ul class="recent-list">
+                {% for post in recent_posts %}
+                <li class="recent-item">
+                    <div>
+                        <div class="item-title">{{ post.title }}</div>
+                        <div class="item-meta">
+                            by {{ post.author.username }} • {{ post.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    <span class="item-badge badge-{{ post.status }}">{{ post.get_status_display }}</span>
+                </li>
+                {% empty %}
+                <li class="recent-item">
+                    <div class="item-title">No posts yet</div>
+                    <div class="item-meta">Create your first post to get started</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title"><i class="fas fa-comments"></i> Recent Comments</h3>
+            <ul class="recent-list">
+                {% for comment in recent_comments %}
+                <li class="recent-item">
+                    <div>
+                        <div class="item-title">{{ comment.name }}</div>
+                        <div class="item-meta">
+                            on "{{ comment.post.title }}" • {{ comment.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    <span class="item-badge badge-{% if comment.approved %}approved{% else %}pending{% endif %}">
+                        {% if comment.approved %}Approved{% else %}Pending{% endif %}
+                    </span>
+                </li>
+                {% empty %}
+                <li class="recent-item">
+                    <div class="item-title">No comments yet</div>
+                    <div class="item-meta">Comments will appear here when visitors engage with your posts</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    {% if most_commented %}
+    <div class="content-section">
+        <h3 class="section-title"><i class="fas fa-fire"></i> Most Commented Posts</h3>
+        <ul class="recent-list">
+            {% for post in most_commented %}
+            <li class="recent-item">
+                <div>
+                    <div class="item-title">{{ post.title }}</div>
+                    <div class="item-meta">by {{ post.author.username }}</div>
+                </div>
+                <span class="item-badge badge-approved">{{ post.comment_count }} comments</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

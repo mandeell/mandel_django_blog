@@ -1,0 +1,128 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Edit User - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/posts.css' %}">
+{{ form.media.css }}
+{% endblock %}
+
+{% block content %}
+<div class="posts-container">
+    <div class="posts-header">
+        <h1><i class="fas fa-edit"></i> Edit User</h1>
+        <a href="{% url 'admin_panel:user_list' %}" class="inline-flex items-center gap-2 bg-purple-500 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-sm">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+    </div>
+    
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" id="postForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-danger">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="text-danger">{{ form.password.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.confirm_password.id_for_label }}">Confirm Password</label>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}
+                    <div class="text-danger">{{ form.confirm_password.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="text-danger">{{ form.first_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="text-danger">{{ form.last_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.bio.id_for_label }}">Bio</label>
+                {{ form.bio }}
+                {% if form.bio.errors %}
+                    <div class="text-danger">{{ form.bio.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.profile_picture.id_for_label }}">Profile Picture</label>
+                {{ form.profile_picture }}
+                {% if form.profile_picture.errors %}
+                    <div class="text-danger">{{ form.profile_picture.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.is_active.id_for_label }}">Is Active</label>
+                {{ form.is_active }}
+                {% if form.is_active.errors %}
+                    <div class="text-danger">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.is_staff.id_for_label }}">Is Staff</label>
+                {{ form.is_staff }}
+                {% if form.is_staff.errors %}
+                    <div class="text-danger">{{ form.is_staff.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.is_superuser.id_for_label }}">Is Superuser</label>
+                {{ form.is_superuser }}
+                {% if form.is_superuser.errors %}
+                    <div class="text-danger">{{ form.is_superuser.errors }}</div>
+                {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="text-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Update Tag
+                </button>
+                <a href="{% url 'admin_panel:user_list' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ form.media.js }}
+<script src="{% static 'js/posts.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Tags - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <i class="fas fa-comments text-purple-600"></i>
+                Tags
+            </h1>
+            <p class="text-gray-600 mt-1">Manage blog tags</p>
+        </div>
+        <a href="{% url 'admin_panel:tag_create' %}"
+           class="inline-flex items-center gap-2 bg-purple-500 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-sm">
+            <i class="fas fa-plus"></i>
+            Create New Tag
+        </a>
+    </div>
+    
+    <!-- Modern Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-300 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-md   font-semibold text-gray-600 uppercase tracking-wider">
+                            Tag
+                        </th>
+                        <th class="px-6 py-4 text-left text-md font-semibold text-gray-600 uppercase tracking-wider">
+                            Date
+                        </th>
+                        <th class="px-6 py-4 text-right text-md font-semibold text-gray-600 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for tag in tags %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <td class="px-6 py-3">
+                            <div class="flex flex-col">
+                                <div class="text-lg text-gray-900 mb-2 line-clamp-2">
+                                <div class="text-lg text-gray-900 mb-2 line-clamp-2">
+                                    {{ tag.name|truncatechars:100 }}
+                                </div>
+                                    </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-2">
+                            <div class="text-sm text-gray-900">
+                                {{ tag.created_at|date:"M d, Y" }}
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                {{ tag.created_at|date:"g:i A" }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-2 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'admin_panel:tag_edit' tag.pk %}"
+                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 text-amber-600 hover:bg-amber-200 transition-colors duration-150"
+                                   title="Edit Post">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </a>
+                                <a href="{% url 'admin_panel:tag_delete' tag.pk %}"
+                                   target="_self"
+                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-150"
+                                   title="Delete Comment">
+                                    <i class="fas fa-trash text-sm"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-comments text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">No comments found</h3>
+                                <p class="text-gray-500 mb-4">Comments will appear here when visitors comment on your posts.</p>
+                                <a href="{% url 'admin_panel:post_list' %}" 
+                                   class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                    <i class="fas fa-file-alt"></i>
+                                    View Posts
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modern Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="flex items-center justify-between mt-6">
+        <div class="text-sm text-gray-700">
+            Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+        <nav class="flex items-center gap-2">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-150">
+                    <i class="fas fa-angle-double-left mr-1"></i>
+                    First
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-150">
+                    <i class="fas fa-angle-left mr-1"></i>
+                    Previous
+                </a>
+            {% endif %}
+            
+            <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 border border-purple-200 rounded-lg">
+                {{ page_obj.number }}
+            </span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-150">
+                    Next
+                    <i class="fas fa-angle-right ml-1"></i>
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" 
+                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 transition-colors duration-150">
+                    Last
+                    <i class="fas fa-angle-double-right ml-1"></i>
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

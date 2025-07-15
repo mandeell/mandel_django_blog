@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Blog{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'blog:home' %}" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-blog text-white text-sm"></i>
+                        </div>
+                        <span class="text-lg sm:text-xl font-bold text-gray-900">Django Blog</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+
+                </div>
+                
+                <!-- Desktop Search & Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <!-- Desktop Search -->
+                    <form method="get" action="{% url 'blog:search' %}" class="hidden sm:block relative">
+                        <input type="search" 
+                               name="q" 
+                               placeholder="Search posts..." 
+                               value="{{ request.GET.q }}"
+                               class="w-48 lg:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </form>
+                    
+                    <!-- Mobile Search Button -->
+                    <button id="mobile-search-btn" class="sm:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Search Form -->
+            <div id="mobile-search" class="hidden sm:hidden pb-4">
+                <form method="get" action="{% url 'blog:search' %}" class="relative">
+                    <input type="search" 
+                           name="q" 
+                           placeholder="Search posts..." 
+                           value="{{ request.GET.q }}"
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </form>
+            </div>
+            
+            <!-- Mobile Navigation Menu -->
+            <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 py-4">
+                <div class="space-y-2">
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- About -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-blog text-white text-sm"></i>
+                        </div>
+                        <span class="text-lg sm:text-xl font-bold">Django Blog</span>
+                    </div>
+                    <p class="text-gray-300 mb-4 text-sm sm:text-base">
+                        A modern, elegant blog platform built with Django and Tailwind CSS. 
+                        Share your stories and connect with readers worldwide.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-base sm:text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'blog:home' %}" class="text-gray-300 hover:text-white transition-colors duration-200 text-sm sm:text-base">Home</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-base sm:text-lg font-semibold mb-4">Stay Updated</h3>
+                    <p class="text-gray-300 mb-4 text-sm sm:text-base">Subscribe to our newsletter for the latest posts and updates.</p>
+                    <form id="newsletterForm" class="space-y-3">
+                        {% csrf_token %}
+                        <input type="email" 
+                               name="email" 
+                               placeholder="Enter your email"
+                               class="w-full px-3 sm:px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 text-sm sm:text-base">
+                        <button type="submit" 
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm sm:text-base">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center">
+                <p class="text-gray-400 text-sm sm:text-base">&copy; 2024 Django Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const icon = this.querySelector('i');
+            
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                mobileMenu.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Mobile search toggle
+        document.getElementById('mobile-search-btn').addEventListener('click', function() {
+            const mobileSearch = document.getElementById('mobile-search');
+            const icon = this.querySelector('i');
+            
+            if (mobileSearch.classList.contains('hidden')) {
+                mobileSearch.classList.remove('hidden');
+                icon.classList.remove('fa-search');
+                icon.classList.add('fa-times');
+                // Focus on the search input
+                setTimeout(() => {
+                    mobileSearch.querySelector('input').focus();
+                }, 100);
+            } else {
+                mobileSearch.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-search');
+            }
+        });
+        
+        // Newsletter form submission
+        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = this.querySelector('input[type="email"]').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+            
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Subscribing...';
+            submitBtn.disabled = true;
+            
+            fetch('/subscribe/', {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    this.reset();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = 'Subscribe';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+    
+    <script src="{% static 'js/blog.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,236 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Add New Subscriber - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .create-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+    }
+    .form-group {
+        transition: all 0.3s ease;
+    }
+    .form-group:focus-within {
+        transform: translateY(-2px);
+    }
+    .input-icon {
+        background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    }
+    .success-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        transition: all 0.3s ease;
+    }
+    .success-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+    .cancel-btn {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        transition: all 0.3s ease;
+    }
+    .cancel-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
+    }
+    @media (max-width: 768px) {
+        .mobile-stack {
+            flex-direction: column;
+        }
+        .mobile-full {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen create-container flex items-center justify-center p-6">
+    <div class="w-full max-w-lg">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-4">
+                <i class="fas fa-user-plus text-3xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2">Add New Subscriber</h1>
+            <p class="text-blue-100 text-lg">Manually add a subscriber to your mailing list</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="create-card rounded-2xl p-8 shadow-2xl">
+            <form method="post" id="subscriberForm" novalidate>
+                {% csrf_token %}
+                
+                <!-- Email Field -->
+                <div class="form-group mb-6">
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 transform -translate-y-1/2 input-icon w-10 h-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-envelope text-white"></i>
+                        </div>
+                        <input type="email" 
+                               name="email" 
+                               id="email"
+                               class="w-full pl-16 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-lg"
+                               placeholder="Enter subscriber email address..."
+                               required>
+                    </div>
+                    <div id="email-error" class="text-red-500 text-sm mt-2 hidden"></div>
+                    <div class="text-gray-600 text-sm mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Enter a valid email address for the new subscriber
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="form-group mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <i class="fas fa-cog text-purple-600"></i>
+                        Subscription Options
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Send Welcome Email -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <label for="send_welcome" class="text-sm font-medium text-gray-700">
+                                    <i class="fas fa-paper-plane mr-2 text-blue-500"></i>Send Welcome Email
+                                </label>
+                                <p class="text-xs text-gray-500 mt-1">Send a welcome email to the new subscriber</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="send_welcome" 
+                                       id="send_welcome"
+                                       class="sr-only peer"
+                                       checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Active Status -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <label for="is_active" class="text-sm font-medium text-gray-700">
+                                    <i class="fas fa-check-circle mr-2 text-green-500"></i>Active Subscription
+                                </label>
+                                <p class="text-xs text-gray-500 mt-1">Subscriber will receive newsletters</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="is_active" 
+                                       id="is_active"
+                                       class="sr-only peer"
+                                       checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 mobile-stack">
+                    <button type="submit" 
+                            class="success-btn flex-1 mobile-full inline-flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl shadow-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        Add Subscriber
+                    </button>
+                    <a href="{% url 'admin_panel:subscriber_list' %}" 
+                       class="cancel-btn flex-1 mobile-full inline-flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="mt-6 text-center">
+            <div class="bg-white bg-opacity-10 rounded-xl p-4">
+                <h3 class="text-white font-semibold mb-2 flex items-center justify-center gap-2">
+                    <i class="fas fa-lightbulb"></i>
+                    Pro Tips
+                </h3>
+                <ul class="text-white text-sm space-y-1 opacity-90">
+                    <li>• Ensure the email address is valid and active</li>
+                    <li>• Welcome emails help engage new subscribers</li>
+                    <li>• You can always modify subscription status later</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('subscriberForm');
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('email-error');
+
+    // Email validation
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    function showError(message) {
+        emailError.textContent = message;
+        emailError.classList.remove('hidden');
+        emailInput.classList.add('border-red-500');
+        emailInput.classList.remove('border-gray-200');
+    }
+
+    function hideError() {
+        emailError.classList.add('hidden');
+        emailInput.classList.remove('border-red-500');
+        emailInput.classList.add('border-gray-200');
+    }
+
+    // Real-time email validation
+    emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        
+        if (email === '') {
+            hideError();
+            return;
+        }
+        
+        if (!validateEmail(email)) {
+            showError('Please enter a valid email address');
+        } else {
+            hideError();
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        const email = emailInput.value.trim();
+        
+        if (!email) {
+            e.preventDefault();
+            showError('Email address is required');
+            emailInput.focus();
+            return;
+        }
+        
+        if (!validateEmail(email)) {
+            e.preventDefault();
+            showError('Please enter a valid email address');
+            emailInput.focus();
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding Subscriber...';
+        submitBtn.disabled = true;
+    });
+
+    // Auto-focus email input
+    emailInput.focus();
+});
+</script>
+{% endblock %}

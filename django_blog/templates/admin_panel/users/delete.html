@@ -1,0 +1,48 @@
+{% extends 'admin_panel/base_new.html' %}
+{% load static %}
+
+{% block title %}Delete User - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/posts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="posts-container">
+    <div class="posts-header">
+        <h1><i class="fas fa-trash"></i> Delete User</h1>
+        <a href="{% url 'admin_panel:user_list' %}" class="inline-flex items-center gap-2 bg-purple-500 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-sm">
+            <i class="fas fa-arrow-left text-white"></i> Back to Users
+        </a>
+    </div>
+    
+    <div class="form-container">
+        <div class="alert alert-danger">
+            <h4><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h4>
+            <p>Are you sure you want to delete the User "<strong>{{ user_obj.username|title }}</strong>"?</p>
+            <p><small class="text-muted">This action cannot be undone.</small></p>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ user_obj.first_name }} {{ user_obj.last_name}}</h5>
+                <div class="post-meta">
+                    <small class="text-muted">
+                        Created at • {{ user_obj.created_at|date:"M d, Y" }} •
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Yes, Delete User
+                </button>
+                <a href="{% url 'admin_panel:user_list' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
