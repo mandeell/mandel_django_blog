@@ -17,7 +17,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='mandel-blog.onrender.com').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 # CKEditor settings
 CKEDITOR_UPLOAD_PATH = 'uploads/'  # Where uploaded images will be stored
