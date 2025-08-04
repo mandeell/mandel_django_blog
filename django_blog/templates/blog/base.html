@@ -40,7 +40,7 @@
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-blog text-white text-sm"></i>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold text-gray-900">Django Blog</span>
+                        <span class="text-lg sm:text-xl font-bold text-gray-900">{{ BLOG_NAME }}</span>
                     </a>
                 </div>
                 
@@ -108,12 +108,9 @@
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                             <i class="fas fa-blog text-white text-sm"></i>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold">Django Blog</span>
+                        <span class="text-lg sm:text-xl font-bold">{{ BLOG_NAME}}</span>
                     </div>
-                    <p class="text-gray-300 mb-4 text-sm sm:text-base">
-                        A modern, elegant blog platform built with Django and Tailwind CSS. 
-                        Share your stories and connect with readers worldwide.
-                    </p>
+                    <p class="text-gray-300 mb-4 text-sm sm:text-base">{{ BLOG_DESCRIPTION }}
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
                             <i class="fab fa-twitter text-lg"></i>
@@ -154,7 +151,7 @@
             </div>
             
             <div class="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center">
-                <p class="text-gray-400 text-sm sm:text-base">&copy; 2024 Django Blog. All rights reserved.</p>
+                <p class="text-gray-400 text-sm sm:text-base">&copy; {{ YEAR }} {{ BLOG_NAME }}. All rights reserved.</p>
             </div>
         </div>
     </footer>

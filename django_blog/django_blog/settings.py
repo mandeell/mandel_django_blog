@@ -7,10 +7,6 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
@@ -35,7 +31,7 @@ MESSAGE_TAGS = {
     messages.INFO: 'info',
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
-    messages.ERROR: 'danger',  # Map 'error' to 'danger'
+    messages.ERROR: 'danger',
 }
 
 # Application definition
@@ -78,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'django_blog.context_processors.blog_settings',  # Add this line
             ],
         },
     },
@@ -90,9 +87,7 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 
@@ -246,5 +241,5 @@ CACHES = {
     }
 }
 # Blog settings
-BLOG_NAME = 'MandelTech Blog'
-BLOG_DESCRIPTION = 'A modern blog built with Django'
+BLOG_NAME = config('BLOG_NAME')
+BLOG_DESCRIPTION = config('BLOG_DESCRIPTION')
