@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% load static %}
 
-{% block title %}Home - Django Blog{% endblock %}
+{% block title %}Home - {{ BLOG_NAME }}{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -18,7 +18,7 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div class="text-center">
             <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                Welcome to Django Blog
+                Welcome to {{ BLOG_NAME }}
             </h1>
             <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
                 Discover amazing stories, insights, and perspectives from our community of writers and thinkers.

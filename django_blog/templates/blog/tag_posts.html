@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% load static %}
 
-{% block title %}Posts tagged "{{ tag.name }}" - Django Blog{% endblock %}
+{% block title %}Posts tagged "{{ tag.name }}" - {{ BLOG_NAME }}{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb -->
