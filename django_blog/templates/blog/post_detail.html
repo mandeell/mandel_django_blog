@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% load static %}
 
-{% block title %}{{ post.title }} - Django Blog{% endblock %}
+{% block title %}{{ post.title }} - {{ BLOG_NAME }}{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb -->
@@ -147,7 +147,7 @@
                     {% if post.author.bio %}
                         <p class="text-gray-600 mb-4">{{ post.author.bio }}</p>
                     {% else %}
-                        <p class="text-gray-600 mb-4">Passionate writer and contributor to Django Blog.</p>
+                        <p class="text-gray-600 mb-4">Passionate writer and contributor to {{ BLOG_NAME }}.</p>
                     {% endif %}
                     <a href="{{ post.author.get_absolute_url }}" 
                        class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium">
