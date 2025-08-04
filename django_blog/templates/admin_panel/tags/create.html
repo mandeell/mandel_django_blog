@@ -1,11 +1,13 @@
 {% extends 'admin_panel/base_new.html' %}
 {% load static %}
+{% load quill_tags %}
 
 {% block title %}Create Tag - Admin Panel{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/posts.css' %}">
 {{ form.media.css }}
+{% quill_js_cdn %}
 {% endblock %}
 
 {% block content %}
@@ -43,4 +45,5 @@
 {% block extra_js %}
 {{ form.media.js }}
 <script src="{% static 'js/posts.js' %}"></script>
+{% quill_init_js %}
 {% endblock %}

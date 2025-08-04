@@ -3,7 +3,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils import timezone
-from ckeditor_uploader.fields import RichTextUploadingField
+
+from tinymce.models import HTMLField
+from django_summernote.fields import SummernoteTextField
 
 
 class User(AbstractUser):
@@ -47,7 +49,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    content = RichTextUploadingField()
+    content = SummernoteTextField()
     excerpt = models.TextField(max_length=300, help_text="Brief description of the post")
     featured_image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')

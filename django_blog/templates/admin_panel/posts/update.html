@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/posts.css' %}">
-{{ form.media.css }}
+{{ form.media }}
 {% endblock %}
 
 {% block content %}
@@ -87,6 +87,5 @@
 {% endblock %}
 
 {% block extra_js %}
-{{ form.media.js }}
 <script src="{% static 'js/posts.js' %}"></script>
 {% endblock %}

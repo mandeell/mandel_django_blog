@@ -1,4 +1,5 @@
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from tinymce.widgets import TinyMCE
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from django import forms
 from .models import Comment, Subscriber, Post, Tag, User
 from .permissions import validate_strong_password
@@ -67,7 +68,7 @@ class PostForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Post Title'
             }),
-            'content': CKEditorUploadingWidget(),
+            'content': SummernoteWidget(),
             # 'content': forms.Textarea(attrs={
             #     'class': 'form-control',
             #     'rows': 10,

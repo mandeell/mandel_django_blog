@@ -19,15 +19,38 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
-# CKEditor settings
-CKEDITOR_UPLOAD_PATH = 'uploads/'  # Where uploaded images will be stored
-CKEDITOR_IMAGE_BACKEND = 'pillow'  # Required for image processing
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
+# Django Summernote Configuration
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode, default
+    'iframe': True,
+    
+    # You can put custom Summernote settings
+    'summernote': {
+        # Change editor size
         'width': '100%',
+        'height': '480',
+        
+        # Toolbar customization
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
     },
+    
+    # Disable attachment feature - we'll use only inline images
+    'disable_attachment': False,
+    
+    # Set to True to automatically save uploaded images to media storage
+    'attachment_require_authentication': False,
+    
+    # You can completely disable the image upload feature
+    'disable_uploader': False,
 }
 
 MESSAGE_TAGS = {
@@ -49,9 +72,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'admin_panel',
-    'ckeditor',
-    'ckeditor_uploader',
-
+    'tinymce',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [

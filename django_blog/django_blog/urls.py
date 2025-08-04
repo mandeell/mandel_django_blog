@@ -7,7 +7,8 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('admin-panel/', include('admin_panel.urls')),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('tinymce/', include('tinymce.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]
 
 if settings.DEBUG:
